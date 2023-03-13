@@ -48,7 +48,7 @@ void *reader(void* num){
     printf("Reader %d entering\n",number+1);
     wait(&Rmutex);
     Rcount++;
-    printf("Reader %d count increment to %d \n",number+1,Rcount);
+    printf("Reader %d increments count to %d \n",number+1,Rcount);
     if(Rcount == 1){
         wait(&CSmutex);
         printf("Critical Section openend for Readers!!!\n");
@@ -65,7 +65,7 @@ void *reader(void* num){
 
     wait(&Rmutex);
     Rcount--;
-    printf("Reader %d count decrement to %d \n",number+1,Rcount);
+    printf("Reader %d decrements count to %d \n",number+1,Rcount);
     signal(&Rmutex);
     if(Rcount == 0){
         signal(&CSmutex);
