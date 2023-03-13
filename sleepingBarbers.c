@@ -1,0 +1,125 @@
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdatomic.h>
+#include <assert.h>
+#include <unistd.h>
+
+// custom semaphore struct
+typedef volatile struct
+{
+    volatile atomic_int val;
+    volatile atomic_flag lock;
+} semaphore;
+semaphore mutex, cust, barb;
+
+// initialise semaphore value
+void init(semaphore *s,int value){
+    s->val = value;
+}
+
+// wait
+int wait(semaphore *s)
+{
+    while (atomic_flag_test_and_set(&s->lock))
+        ;
+    while (atomic_load(&s->val) <= 0)
+        ;
+    atomic_fetch_sub(&s->val, 1);
+    atomic_flag_clear(&s->lock);
+    return 0;
+}
+
+// signal
+int signal(semaphore *s)
+{
+    return atomic_fetch_add(&s->val, 1);
+}
+
+// Global variables
+
+#define NUM_CHAIR 10
+#define NUM_CUSTOMER 20
+
+int waiting = 0;
+int free_chair = NUM_CHAIR;
+
+/*
+* The barber sleeps when there are no customer present
+* If there are customers on the waiting chairs then he will cut their hair one at a time
+*/
+
+void *barber(void *arg){
+    while (1)
+    {
+        // Entry Section
+        wait(&cust);
+        wait(&mutex);
+        
+        // Critical Section
+        waiting--;
+        free_chair++;
+        printf("Cutting hair\n");
+
+        // Exit Section
+        signal(&mutex);
+        signal(&barb);
+        sleep(1);
+    }
+    pthread_exit(NULL);
+}
+
+/*
+* The customer wake the barber up if he is sleeping
+* If he is awake they will wait and try to occupy the waiting chairs
+* If the chairs are not avaiable they will leave and come after some time
+*/
+
+void *customer(void *arg){
+    int id = *((int *)arg);
+    int has_haircut = 0;
+    while (has_haircut==0){
+        // Entry Section
+        wait(&mutex);
+
+        if(free_chair <= 0){
+            // Exit Section
+            printf("Customer %d left without haicut\n",id);
+            signal(&mutex);
+            sleep(1);
+        }
+        else{
+            // Critical Section
+            free_chair --;
+            printf("Customer %d is getting hair cut\nThere are %d free chairs\n",id,free_chair);
+            has_haircut = 1;
+            
+            // Exit Section
+            signal(&cust);
+            signal(&mutex);
+            wait(&barb);
+        }
+    }
+    pthread_exit(NULL);
+}
+
+int main(int argc, char const *argv[]){
+    pthread_t t_barber, t_customer[NUM_CUSTOMER];
+    int id[NUM_CUSTOMER];
+    init(&barb,0);
+    init(&cust,0);
+    init(&mutex,1);
+    pthread_create(&t_barber,NULL,barber,NULL);
+    for (size_t i = 0; i < NUM_CUSTOMER; i++)
+    {
+        id[i] = i+1;
+        pthread_create(&t_customer[i],NULL,customer,&id[i]);
+    }
+    for (size_t i = 0; i < NUM_CUSTOMER; i++)
+    {
+        pthread_join(t_customer[i],NULL);
+    }
+    printf("\nSuccessfully finished execution.\n");
+    return 0;
+}
