@@ -58,7 +58,7 @@ int get_value(custom_semaphore* sem) {
     return value;
 }
 
-custom_semaphore full, pc_mutex;
+custom_semaphore non_empty, pc_mutex;
 struct node *head = NULL;
 struct node *tail = NULL;
 bool active = true;
@@ -85,7 +85,7 @@ int main(int argc, char**argv) {
             break;
     }
 
-    custom_init(&full, 0);
+    custom_init(&non_empty, 0);
     custom_init(&pc_mutex, 1);
 
     pthread_t producer_threads[numberOfProducers];
@@ -156,12 +156,12 @@ void *producer_function(void *ptr) {
         printf("producer %d produced %d\n", threadNumber , nextProduced);
 
         custom_signal(&pc_mutex);
-        custom_signal(&full);
+        custom_signal(&non_empty);
 
         sleep(getRandomNumber(5));
     } while (active);
 
-    custom_signal(&full);
+    custom_signal(&non_empty);
 }
 
 void *consumer_function(void *ptr) {
@@ -171,7 +171,7 @@ void *consumer_function(void *ptr) {
     do {
         int nextConsumed;
 
-        custom_wait(&full);
+        custom_wait(&non_empty);
         custom_wait(&pc_mutex);
 
         nextConsumed = head->data;
