@@ -39,6 +39,7 @@ int signal(semaphore *s)
 
 // Global variables
 
+#define NUM_BARBER 3
 #define NUM_CHAIR 10
 #define NUM_CUSTOMER 20
 
@@ -51,6 +52,7 @@ int free_chair = NUM_CHAIR;
 */
 
 void *barber(void *arg){
+    int id = *((int *)arg);
     while (1)
     {
         // Entry Section
@@ -60,10 +62,11 @@ void *barber(void *arg){
         // Critical Section
         waiting--;
         free_chair++;
-        printf("Cutting hair\n");
+        signal(&mutex);
+
+        printf("Barber %d is cutting hair\n",id);
 
         // Exit Section
-        signal(&mutex);
         signal(&barb);
         sleep(1);
     }
@@ -92,34 +95,40 @@ void *customer(void *arg){
         else{
             // Critical Section
             free_chair --;
-            printf("Customer %d is getting hair cut\nThere are %d free chairs\n",id,free_chair);
+            printf("There are %d free chairs\n",free_chair);
             has_haircut = 1;
             
             // Exit Section
             signal(&cust);
             signal(&mutex);
             wait(&barb);
+            printf("Customer %d is getting hair cut\n",id);
         }
     }
     pthread_exit(NULL);
 }
 
 int main(int argc, char const *argv[]){
-    pthread_t t_barber, t_customer[NUM_CUSTOMER];
-    int id[NUM_CUSTOMER];
+    pthread_t t_barber[NUM_BARBER], t_customer[NUM_CUSTOMER];
+    int cust_id[NUM_CUSTOMER],barb_id[NUM_BARBER];
     init(&barb,0);
     init(&cust,0);
     init(&mutex,1);
-    pthread_create(&t_barber,NULL,barber,NULL);
+    // pthread_create(&t_barber,NULL,barber,NULL);
     for (size_t i = 0; i < NUM_CUSTOMER; i++)
     {
-        id[i] = i+1;
-        pthread_create(&t_customer[i],NULL,customer,&id[i]);
+        cust_id[i] = i+1;
+        pthread_create(&t_customer[i],NULL,customer,&cust_id[i]);
+    }
+    for (size_t i = 0; i < NUM_BARBER; i++)
+    {
+        barb_id[i] = i+1;
+        pthread_create(&t_barber[i],NULL,barber,&barb_id[i]);   
     }
     for (size_t i = 0; i < NUM_CUSTOMER; i++)
     {
         pthread_join(t_customer[i],NULL);
-    }
+    }  
     printf("\nSuccessfully finished execution.\n");
     return 0;
 }
