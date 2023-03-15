@@ -1,4 +1,4 @@
-all: diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer PC_CyclicBuffer
+all: diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer PC_CyclicBuffer PC_InfiniteBuffer
 
 diningPhilosopher: diningPhilosopher.c
 	gcc diningPhilosopher.c -o diningPhilosopher -lpthread
@@ -24,5 +24,8 @@ PC_BoundedBuffer: PC_BoundedBuffer.c
 PC_CyclicBuffer: PC_CyclicBuffer.c
 	gcc PC_CyclicBuffer.c -o PC_CyclicBuffer -lpthread
 
+PC_InfiniteBuffer: PC_InfiniteBuffer.c
+	gcc PC_InfiniteBuffer.c -o PC_InfiniteBuffer -lpthread
+
 clean:
-	rm -f diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer PC_CyclicBuffer
+	rm -f diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer PC_CyclicBuffer PC_InfiniteBuffer
