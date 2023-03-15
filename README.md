@@ -25,7 +25,9 @@ The Reader-Writer Problem is a classic scenario in Computer Science where multip
 Here, we have presented a Starve-free Solution with pthread implementation using custom semaphores. We used 3 semaphores to make the problem starve free, used pthreads to make the processes parallel and managed the whole synchronization processes using our custom semaphores. The implementation is done keeping in mind that multiple Readers can access the Critical Section together but when a writer is accessing the Critical Section no other Reader or Writer should access it.
 ### Cigarette Smokers' Problem
 ##### Description:
+There are 3 ingredients involved and 3 smokers involved with each having infinite supply of one along with an agent. All the three ingredients are required simultaneously by a smoker to smoke. Whenever the agent sees the table empty, he arbitrarily puts 2 ingredients on the table. 
 ##### Solution:
+We maintain an atomic integer which tells the state of the table(what ingredients are there in case table is not empty or is the table empty) and then make each smoker wait till the two ingredients placed by agent are such that non of them are with the smoker which picks up the ingredients. The ingredients to be put on table are decided randomly.
 ### Sleeping Barbers' Problem
 ##### Description:
 ##### Solution:
