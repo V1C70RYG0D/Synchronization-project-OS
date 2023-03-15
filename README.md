@@ -53,18 +53,18 @@ manner so that the following rules are followed:
 
 * The "signal" function signals a waiting thread that the semaphore is available.
 
-The "sushi_bar" function is the main function that implements the solution to the Sushi Bar problem.
-The function runs in an infinite loop and represents a single customer.
-It first waits for the "mutex" semaphore to become available and then checks if there are any empty
-seats at the sushi bar. If there are no empty seats, the customer increments the "waiting" variable
-and waits for the "block" semaphore to become available. If there are empty seats,
-the customer increments the "eating" variable and signals the "mutex" semaphore.
-The customer then eats sushi for 3 seconds, decrements the "eating" variable,
-and checks if there are any waiting customers. If there are waiting customers and empty seats,
-the customer signals the "block" semaphore to allow a waiting customer to eat sushi.
+* The "sushi_bar" function is the main function that implements the solution to the Sushi Bar problem.
+  The function runs in an infinite loop and represents a single customer.
+  It first waits for the "mutex" semaphore to become available and then checks if there are any empty
+  seats at the sushi bar. If there are no empty seats, the customer increments the "waiting" variable
+  and waits for the "block" semaphore to become available. If there are empty seats,
+  the customer increments the "eating" variable and signals the "mutex" semaphore.
+  The customer then eats sushi for 3 seconds, decrements the "eating" variable,
+  and checks if there are any waiting customers. If there are waiting customers and empty seats,
+  the customer signals the "block" semaphore to allow a waiting customer to eat sushi.
 
-The "main" function initializes the semaphores and creates threads for each customer.
-The function then runs in an infinite loop to keep the program running.
+* The "main" function initializes the semaphores and creates threads for each customer.
+  The function then runs in an infinite loop to keep the program running.
 
 ```py
 def sushi_bar(customer_id):
