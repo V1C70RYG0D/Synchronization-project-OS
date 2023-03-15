@@ -66,6 +66,7 @@ manner so that the following rules are followed:
 * The "main" function initializes the semaphores and creates threads for each customer.
   The function then runs in an infinite loop to keep the program running.
 
+#### Pseudo-Code!
 ```py
 def sushi_bar(customer_id):
     global eating, waiting
