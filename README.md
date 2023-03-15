@@ -35,13 +35,13 @@
 ##### Solution:
 ---
 ##Team members:
-* Jainil Patel
-* Gyanendra Banjare
-* Manas Ghandat
-* Priyansh Rathi
-* Ahsen Kamal
-* Sudarshan Shenoy
+* Priyansh Rathi 20116073 B.Tech ECE 3Y
+* Ahsen Kamal 20116073 B.Tech ECE 3Y
+* Sudarshan Shenoy 20116073 B.Tech ECE 3Y
+* Patel Jainil Subhaskumar 21114072 B.Tech CSE 2Y
+* Gyanendra Banjare 21114040 B.Tech CSE 2Y
+* Manas Ghandat 21114037 B.Tech CSE 2Y
 * Subhajit Biswas 21114100 B.Tech CSE 2Y
-* Sumit Kumar
-* Manan Garg
-* Aarya Mukul Agrawal
+* Sumit Kumar 21114101 B.Tech CSE 2Y
+* Manan Garg 21114056 B.Tech CSE 2Y
+* Aarya Mukul Agrawal 21114001 B.Tech CSE 2Y
