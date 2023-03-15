@@ -17,7 +17,71 @@ https://drive.google.com/file/d/1fC1JbBpo2hTfkM7_uceoX8TMJwQYyUdR/view?usp=share
 ---
 ### Producer Consumer Problem
 ##### Description:
+The producer-consumer problem is defined as follows:
+
+There is a buffer, Producer process, and a Consumer process. The Producer process creates an item and adds it to the shared buffer. The Consumer process takes items out of the shared buffer and “consumes” them.
+
+Certain conditions must be met by the Producer and the Consumer processes to have consistent data synchronization:
+
+1. The Producer process must not produce an item if the shared buffer is full.
+
+2. The Consumer process must not consume an item if the shared buffer is empty.
+
+3. Access to the shared buffer must be mutually exclusive; this means that at any given instance, only one process should be able to access the shared buffer and make changes to it.
+
+Bounded Buffer - The size of the buffer is limited
+Cyclic Buffer - The buffer is size limited and producing and consuming happens in a cyclic manner; that is the produce and consume indices are always incremented and wrapped around
+Infinite Buffer - There is no limitation on size and the producer can keep producing into the buffer
 ##### Solution:
+The solution to the Producer-Consumer problem having bounded and cyclic buffers involve three semaphore variables.
+
+full: Tracks the space filled by the Producer process. It is initialized with a value of 0 as the buffer will have no filled spaces at the beginning
+empty: Tracks the empty space in the buffer. It is initially set to BUFFER_SIZE as the whole buffer is empty at the beginning.
+pc_mutex: Used for mutual exclusion so that only one process can access the shared buffer at a time. Initially set to 1
+
+Pseudocode for Producer:
+```c
+wait(empty)
+wait(pc_mutex)
+
+// produce
+
+signal(pc_mutex)
+signal(full)
+```
+Pseudocode for Consumer:
+```c
+wait(full)
+wait(pc_mutex)
+
+// consume
+
+signal(pc_mutex)
+signal(empty)
+```
+The solution to the Producer-Consumer problem having infinite buffer involves two semaphore variables, and the buffer is implemented in a linked list fashion. The semaphores are:
+
+**non_empty**: Tracks if the buffer is not empty so that consumer can consume from the buffer. Initially set to 0
+**pc_mutex**: Used for mutual exclusion so that only one process can access the shared buffer at a time. Initially set to 1
+
+Pseudocode for Producer:
+```c
+wait(pc_mutex)
+
+// produce
+
+signal(pc_mutex)
+signal(non_empty)
+```
+Pseudocode for Consumer:
+```c
+wait(non_empty)
+wait(pc_mutex)
+
+// consume
+
+signal(pc_mutex)
+```
 ### Dining Philosophers' Problem
 ##### Description:
 The Dining Philosopher problem is a classcial synchronisation problem in which there are n philosophers on a round table with a chopstick between adjacent philosophers. A philosopher may eat if he can pick up the two chopsticks adjacent to him.
