@@ -20,7 +20,9 @@ https://drive.google.com/file/d/1fC1JbBpo2hTfkM7_uceoX8TMJwQYyUdR/view?usp=share
 ##### Solution:
 ### Dining Philosophers' Problem
 ##### Description:
+The Dining Philosopher problem is a classcial synchronisation problem in which there are n philosophers on a round table with a chopstick between adjacent philosophers. A philosopher may eat if he can pick up the two chopsticks adjacent to him.
 ##### Solution:
+Every philosopher picks up the chopsticks one by one and eats and then puts them down when he is done eating. To make our solution deadlock-free, we have defined a separate function for the last philospher process, which picks up chopsticks in the opposite order, thus preventing deadlock.
 ### Readers Writers Problem
 ##### Description:
 The Reader-Writer Problem is a classic scenario in Computer Science where multiple processes concurrently access shared resources.The critical section can be accessed by only one writer or by multiple readers simultaneously at any point of time. Semaphores are used to prevent conflicts and ensure proper process synchronization.
