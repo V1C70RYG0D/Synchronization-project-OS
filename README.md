@@ -33,7 +33,45 @@
 ##### Solution:
 ### Unisex Bathroom Problem
 ##### Description:
+* There are two types of employees (processes): males and females
+* They have to use a shared resource "bathroom"
+* The synchronization constraints are as follows
+  - There cannot be males and females at the same time in the "bathroom"
+  - There should never be more than three employees (processes) using
+      the "bathroom" at the same time
 ##### Solution:
+  The pseudocode for the solution is as follows:
+  * Initialize:
+    - `male_count = 0, female_count = 0`
+    - `male_count_mutex = 1, female_count_mutex = 1`
+    - `male_multiplex = 3, female_multiplex = 3`
+    - `empty = 1, turnstile = 1`
+
+  * Male process:
+    ```c
+    wait(turnstile);
+      wait(male_count_mutex);
+        male_count++;
+        if (male_count == 1) {
+          wait(empty);
+        }
+      signal(male_count_mutex);
+    signal(turnstile);
+
+    wait(male_multiplex);
+      // use bathroom
+    signal(male_multiplex);
+
+    wait(male_count_mutex);
+      male_count--;
+      if (male_count == 0) {
+        signal(empty);
+      }
+    signal(male_count_mutex);
+    ```
+
+  * Female process:  
+    -- similar to the male process --
 ---
 ## Team members:
 * **Priyansh Rathi** 20116073 B.Tech ECE 3Y
