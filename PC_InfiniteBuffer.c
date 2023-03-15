@@ -7,24 +7,20 @@
 
 #define BUFFER_SIZE 8
 #define MY_RAND_MAX 99
-#define PRINT_BUFFER true
 
 void *producer_function(void *ptr);
 void *consumer_function(void *ptr);
-
-void printBuffer(int buffer[BUFFER_SIZE]){
-     for (int i = 0; i < BUFFER_SIZE; ++i)
-     {
-          printf("%d ", buffer[i]);
-     }
-     printf("\n");
-}
 
 int getRandomNumber(int MAX){
      int n;
      n = (rand() % MAX) + 1;
      return n;
 }
+
+struct node{
+    int data;
+    struct node *next;
+};
 
 typedef struct {
     int value;
@@ -62,10 +58,9 @@ int get_value(custom_semaphore* sem) {
     return value;
 }
 
-custom_semaphore full, empty, pc_mutex;
-int buffer[BUFFER_SIZE];
-int buffer_in = 0;
-int buffer_out = 0;
+custom_semaphore non_empty, pc_mutex;
+struct node *head = NULL;
+struct node *tail = NULL;
 bool active = true;
 
 int main(int argc, char**argv) {
@@ -90,8 +85,7 @@ int main(int argc, char**argv) {
             break;
     }
 
-    custom_init(&empty, BUFFER_SIZE);
-    custom_init(&full, 0);
+    custom_init(&non_empty, 0);
     custom_init(&pc_mutex, 1);
 
     pthread_t producer_threads[numberOfProducers];
@@ -144,34 +138,30 @@ void *producer_function(void *ptr) {
 
     do {
         int nextProduced = getRandomNumber(MY_RAND_MAX);
-        
-        custom_wait(&empty);
+
         custom_wait(&pc_mutex);
 
-        if (buffer_in == buffer_out && buffer[buffer_in] != 0) {
-            custom_signal(&empty);
-            custom_signal(&pc_mutex);
-            return NULL;
+        struct node *newNode = (struct node*) malloc(sizeof(struct node));
+        newNode->data = nextProduced;
+        newNode->next = NULL;
+
+        if (tail != NULL) {
+            tail->next = newNode;
+        } else {
+            head = newNode;
         }
 
-        buffer[buffer_in] = nextProduced;
-        buffer_in++;
-        buffer_in %= BUFFER_SIZE;
+        tail = newNode;
 
         printf("producer %d produced %d\n", threadNumber , nextProduced);
-    
-        if (PRINT_BUFFER) {
-            printf("Buffer: ");
-            printBuffer(buffer);
-        }
 
         custom_signal(&pc_mutex);
-        custom_signal(&full);
+        custom_signal(&non_empty);
 
         sleep(getRandomNumber(5));
     } while (active);
 
-    custom_signal(&full);
+    custom_signal(&non_empty);
 }
 
 void *consumer_function(void *ptr) {
@@ -181,32 +171,31 @@ void *consumer_function(void *ptr) {
     do {
         int nextConsumed;
 
-        custom_wait(&full);
+        custom_wait(&non_empty);
         custom_wait(&pc_mutex);
 
-        if (buffer[buffer_out] == 0) {
-            custom_signal(&full);
+        if (head == NULL) {
+            custom_signal(&non_empty);
             custom_signal(&pc_mutex);
             return NULL;
         }
 
-        nextConsumed = buffer[buffer_out];
-        buffer[buffer_out] = 0;
-        buffer_out++;
-        buffer_out %= BUFFER_SIZE;
+        nextConsumed = head->data;
+        struct node *temp = head;
+
+        if (head == tail) {
+            head = NULL;
+            tail = NULL;
+        } else {
+            head = head->next;
+        }
+        
+        free(temp);
 
         printf("consumer %d consumed %d\n", threadNumber, nextConsumed);
-        
-        if (PRINT_BUFFER) {
-            printf("Buffer: ");
-            printBuffer(buffer);
-        }
 
         custom_signal(&pc_mutex);
-        custom_signal(&empty);
 
         sleep(getRandomNumber(5));
     } while (active);
-
-    custom_signal(&empty);
 }

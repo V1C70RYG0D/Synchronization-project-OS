@@ -147,6 +147,12 @@ void *producer_function(void *ptr) {
         custom_wait(&empty);
         custom_wait(&pc_mutex);
 
+        if (buffer_top+1 >= BUFFER_SIZE) {
+            custom_signal(&empty);
+            custom_signal(&pc_mutex);
+            return NULL;
+        }
+
         buffer[buffer_top+1] = nextProduced;
         buffer_top++;
 
@@ -175,6 +181,12 @@ void *consumer_function(void *ptr) {
 
         custom_wait(&full);
         custom_wait(&pc_mutex);
+
+        if (buffer_top < 0) {
+            custom_signal(&full);
+            custom_signal(&pc_mutex);
+            return NULL;
+        }
 
         nextConsumed = buffer[buffer_top];
         buffer[buffer_top] = 0;
