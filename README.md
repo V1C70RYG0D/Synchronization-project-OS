@@ -30,6 +30,11 @@ There are 3 ingredients involved and 3 smokers involved with each having infinit
 We maintain an atomic integer which tells the state of the table(what ingredients are there in case table is not empty or is the table empty) and then make each smoker wait till the two ingredients placed by agent are such that non of them are with the smoker which picks up the ingredients. The ingredients to be put on table are decided randomly.
 ### Sleeping Barbers' Problem
 ##### Description:
+In computer science, the sleeping barber problem is a classic inter-process communication and synchronization problem that illustrates the complexities that arise when there are multiple operating system processes. The problem conatins multiple barbers with multiple barber chairs, a waiting room with more chairs for waiting customers. The following rules apply: 
+* If there are no customers, the barbers fall asleep in the chair
+* A customer must wake the barber if he is asleep
+* If a customer arrives while all the barbers are working, the customer leaves if all chairs are occupied and sits in an empty chair if it's available
+* When a barber finishes a haircut, he inspects the waiting room to see if there are any waiting customers and falls asleep if there are none
 ##### Solution:
 ### Sushi Bar Problem
 ##### Description: 
