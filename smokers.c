@@ -13,19 +13,6 @@ typedef volatile struct
     volatile atomic_flag lock;
 } semaphore;
 
-// requirements - smokers and an agent
-// as per internet, the problem is:
-// 3 ingredients, 3 smokers
-// each smoker has 1 ingredient
-// no 2 smokers have same ingredient
-// one agent randonly places 2 ingredients on the table
-// and then smokers pick ingredients
-// Solution -
-// assign ingredients as value 0, 1 and 2
-// make a semaphore
-// each time semaphore value becomes 0 agent puts something on table and increments value of semaphore accordingly
-// each smoker waits for semaphore value to become equal to the value required by him/her
-
 atomic_int onTable;
 
 char *ingredients[3] = {'Tobacco', 'Paper', 'Matches'};
