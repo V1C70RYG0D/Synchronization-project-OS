@@ -1,6 +1,29 @@
 //Readers-Writers problem using Custom Semaphores and p-thread implementation (Starve-free)
 //Here we have shown the Synchronization process using only 10 Readers and 10 Writers
 
+/*
+DESCRIPTION
+~~~~~~~~~~~~
+
+We have Implemented our custom Semaphores using volatile struct named 'semaphore'.
+3 semaphores have been declared CSmutex,Rmutex and EntryMutex
+
+CSmutex for Critical Section entry
+Rmutex for mutual exclusion while updation of ReaderCount
+EntryMutex for equal priority of Readers and Writers to access the Critical Section(Responsible for Starve-free)
+
+wait and signal functions have been implemented for the custom Semaphores
+
+Reader function implemented in a way that multiple readers can access the Critical Section together
+
+Writer function implemented in a way that only one writer is present in Critical section at a time
+
+We have created pthreads for 10 readers and writers each and assigned them with their respective IDs, allowing parallelism.
+
+Finally we joined the pthreads for the threads to wait for each other to join their results.
+
+*/
+
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
