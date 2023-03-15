@@ -1,4 +1,5 @@
 //Readers-Writers problem using Custom Semaphores and p-thread implementation (Starve-free)
+//Here we have shown the Synchronization process using only 5 Readers and 5 Writers
 
 #include <pthread.h>
 #include <stdio.h>
