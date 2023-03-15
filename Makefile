@@ -1,4 +1,4 @@
-all: diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar PC_BoundedBuffer
+all: diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer
 
 diningPhilosopher: diningPhilosopher.c
 	gcc diningPhilosopher.c -o diningPhilosopher -lpthread
@@ -15,8 +15,11 @@ smokers: smokers.c
 SushiBar: SushiBar.c
 	gcc SushiBar.c -o SushiBar -lpthread
 
+UnisexBathroom: UnisexBathroom.c
+	gcc UnisexBathroom.c -o UnisexBathroom -lpthread
+
 PC_BoundedBuffer: PC_BoundedBuffer.c
 	gcc PC_BoundedBuffer.c -o PC_BoundedBuffer -lpthread
 
 clean:
-	rm -f diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar PC_BoundedBuffer
+	rm -f diningPhilosopher ReaderWriter sleepingBarbers smokers SushiBar UnisexBathroom PC_BoundedBuffer
