@@ -19,6 +19,7 @@
 ##### Description:
 ##### Solution:
 ### Readers Writers Problem
+
 ##### Description:
 ##### Solution:
 ### Cigarette Smokers' Problem
@@ -34,7 +35,7 @@
 ##### Description:
 ##### Solution:
 ---
-##Team members:
+## Team members:
 * **Priyansh Rathi** 20116073 B.Tech ECE 3Y
 * **Ahsen Kamal** 20116073 B.Tech ECE 3Y
 * **Sudarshan Shenoy** 20116073 B.Tech ECE 3Y
