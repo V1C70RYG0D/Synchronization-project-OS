@@ -1,4 +1,28 @@
 //Readers-Writers problem using Custom Semaphores and p-thread implementation (Starve-free)
+//Here we have shown the Synchronization process using only 10 Readers and 10 Writers
+
+/*
+DESCRIPTION
+~~~~~~~~~~~~
+
+We have Implemented our custom Semaphores using volatile struct named 'semaphore'.
+3 semaphores have been declared CSmutex,Rmutex and EntryMutex
+
+CSmutex for Critical Section entry
+Rmutex for mutual exclusion while updation of ReaderCount
+EntryMutex for equal priority of Readers and Writers to access the Critical Section(Responsible for Starve-free)
+
+wait and signal functions have been implemented for the custom Semaphores
+
+Reader function implemented in a way that multiple readers can access the Critical Section together
+
+Writer function implemented in a way that only one writer is present in Critical section at a time
+
+We have created pthreads for 10 readers and writers each and assigned them with their respective IDs, allowing parallelism.
+
+Finally we joined the pthreads for the threads to wait for each other to join their results.
+
+*/
 
 #include <pthread.h>
 #include <stdio.h>
@@ -48,7 +72,7 @@ void *reader(void* num){
     printf("Reader %d entering\n",number+1);
     wait(&Rmutex);
     Rcount++;
-    printf("Reader %d increments count to %d \n",number+1,Rcount);
+    printf("Reader %d increments Reader count to %d \n",number+1,Rcount);
     if(Rcount == 1){
         wait(&CSmutex);
         printf("Critical Section openend for Readers!!!\n");
@@ -61,11 +85,11 @@ void *reader(void* num){
      //Critical Section//
     //                //
     printf("In Critical Section Reader %d\n",number+1);
-    usleep(3);
+    sleep(3);
 
     wait(&Rmutex);
     Rcount--;
-    printf("Reader %d decrements count to %d \n",number+1,Rcount);
+    printf("Reader %d decrements Reader count to %d \n",number+1,Rcount);
     signal(&Rmutex);
     if(Rcount == 0){
         signal(&CSmutex);
@@ -80,11 +104,12 @@ void *writer(void* num){
     
     printf("Writer %d trying to enter\n",number+1);
     wait(&EntryMutex);
-    printf("Writer %d enters and closes entry \n",number+1);
+    printf("Writer %d enters from Entry and closes entry \n",number+1);
     wait(&CSmutex);
-    printf("Writer %d in Critical Section\n",number+1);
+    printf("Writer %d locks Critical Section\n",number+1);
     signal(&EntryMutex);
-    printf("Writer %d opens entry now\n",number+1);
+    printf("Writer %d opens entry now for other Readers and Writers\n",number+1);
+    sleep(3);
       //                //
      //Critical Section//
     //                //
@@ -96,15 +121,15 @@ void *writer(void* num){
 
 int main()
 {
-    pthread_t r[5], w[5];
-    int id[5]; // Reader-Writer process id to distinguish them
+    pthread_t r[10], w[10];
+    int id[10]; // Reader-Writer process id to distinguish them
     Rcount = 0;
 
     signal(&CSmutex);   //
     signal(&Rmutex);    //  INITIALIZING ALL SEMAPHORES
     signal(&EntryMutex);//
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 10; i++) {
         id[i] = i; // assigning id
 
         pthread_create(&r[i], NULL, reader, (void *)&id[i]); // Creating pthreads for Reader processes
@@ -112,10 +137,10 @@ int main()
 
     }
     // waiting for threads to execute
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
         pthread_join(r[i], NULL); 
 
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 10; i++)
         pthread_join(w[i], NULL);
 }
 
