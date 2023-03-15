@@ -10,6 +10,9 @@
 * Sushi Bar Problem
 * Unisex Bathroom Problem
 
+## Demo Video Link
+https://drive.google.com/file/d/1fC1JbBpo2hTfkM7_uceoX8TMJwQYyUdR/view?usp=share_link
+
 ## Problem Description with Solutions
 ---
 ### Producer Consumer Problem
@@ -195,8 +198,6 @@ def sushi_bar(customer_id):
     -- similar to the male process --
 
 ---
-## Demo Video Link
-https://drive.google.com/file/d/1fC1JbBpo2hTfkM7_uceoX8TMJwQYyUdR/view?usp=share_link
 ## Team members:
 * **Priyansh Rathi** 20116073 B.Tech ECE 3Y
 * **Ahsen Kamal** 20116073 B.Tech ECE 3Y
