@@ -6,13 +6,22 @@
 #include <assert.h>
 #include <unistd.h>
 
+#define NUM_OF_PHILOSOPHER 10
+
 // custom semaphore struct
 typedef volatile struct
 {
     volatile atomic_int val;
     volatile atomic_flag lock;
 } semaphore;
-semaphore sem[5];
+
+semaphore sem[NUM_OF_PHILOSOPHER];
+
+void init(semaphore *s, int val)
+{
+    atomic_init(&s->val, val);
+    atomic_flag_clear(&s->lock);
+}
 
 // wait
 int wait(semaphore *s)
@@ -40,7 +49,7 @@ void *philosopher_process(void *num)
     // entry section
     printf("philosopher %d is waiting\n", number + 1);
     wait(&sem[number]);
-    wait(&sem[(number + 1) % 5]);
+    wait(&sem[(number + 1) % NUM_OF_PHILOSOPHER]);
 
     // ##### critical section #####
     printf("philosopher %d is eating\n", number + 1);
@@ -49,7 +58,7 @@ void *philosopher_process(void *num)
 
     // exit section
     signal(&sem[number]);
-    signal(&sem[(number + 1) % 5]);
+    signal(&sem[(number + 1) % NUM_OF_PHILOSOPHER]);
     printf("philosopher %d is done eating\n", number + 1);
     pthread_exit(NULL);
 }
@@ -60,7 +69,7 @@ void *philosopher_process_last(void *num)
 
     // entry section
     printf("philosopher %d is waiting\n", number + 1);
-    wait(&sem[(number + 1) % 5]);
+    wait(&sem[(number + 1) % NUM_OF_PHILOSOPHER]);
     wait(&sem[number]);
 
     // ##### critical section #####
@@ -70,27 +79,27 @@ void *philosopher_process_last(void *num)
 
     // exit section
     signal(&sem[number]);
-    signal(&sem[(number + 1) % 5]);
+    signal(&sem[(number + 1) % NUM_OF_PHILOSOPHER]);
     printf("philosopher %d is done eating\n", number + 1);
     pthread_exit(NULL);
 }
 
 int main()
 {
-    int index[5];
-    for (int i = 0; i < 5; i++)
+    int index[NUM_OF_PHILOSOPHER];
+    for (int i = 0; i < NUM_OF_PHILOSOPHER; i++)
         index[i] = i;
-    for (int i = 0; i < 5; i++)
-        signal(&sem[i]);
-    pthread_t philosophers[5];
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < NUM_OF_PHILOSOPHER; i++)
+        init(&sem[i], 1);
+    pthread_t philosophers[NUM_OF_PHILOSOPHER];
+    for (int i = 0; i < NUM_OF_PHILOSOPHER - 1; i++)
     {
         pthread_create(&philosophers[i], NULL, philosopher_process, (void *)&index[i]);
     }
-    pthread_create(&philosophers[4], NULL, philosopher_process_last, (void *)&index[4]);
+    pthread_create(&philosophers[NUM_OF_PHILOSOPHER - 1], NULL, philosopher_process_last, (void *)&index[NUM_OF_PHILOSOPHER - 1]);
 
     // waiting for threads to execute
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < NUM_OF_PHILOSOPHER - 1; i++)
     {
         pthread_join(philosophers[i], NULL);
     }

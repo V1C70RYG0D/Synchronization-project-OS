@@ -40,8 +40,8 @@ int signal(semaphore *s)
 // Global variables
 
 #define NUM_BARBER 3
-#define NUM_CHAIR 10
-#define NUM_CUSTOMER 20
+#define NUM_CHAIR 5
+#define NUM_CUSTOMER 10
 
 int waiting = 0;
 int free_chair = NUM_CHAIR;
@@ -65,10 +65,11 @@ void *barber(void *arg){
         signal(&mutex);
 
         printf("Barber %d is cutting hair\n",id);
+        sleep(1);
 
         // Exit Section
         signal(&barb);
-        sleep(1);
+        // sleep(1);
     }
     pthread_exit(NULL);
 }
@@ -88,21 +89,22 @@ void *customer(void *arg){
 
         if(free_chair <= 0){
             // Exit Section
-            printf("Customer %d left without haicut\n",id);
+            printf("Customer %d left without hair cut\n",id);
             signal(&mutex);
-            sleep(1);
+            sleep(2);
         }
         else{
             // Critical Section
             free_chair --;
             printf("There are %d free chairs\n",free_chair);
             has_haircut = 1;
+            sleep(0.5);
             
             // Exit Section
             signal(&cust);
             signal(&mutex);
             wait(&barb);
-            printf("Customer %d is getting hair cut\n",id);
+            printf("Customer %d has got hair cut\n",id);
         }
     }
     pthread_exit(NULL);

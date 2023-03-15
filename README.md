@@ -17,7 +17,10 @@
 ##### Solution:
 ### Dining Philosophers' Problem
 ##### Description:
+The Dining Philosopher problem is a classcial synchronisation problem in which there are n philosophers on a round table with a chopstick between adjacent philosophers. A philosopher may eat if he can pick up the two chopsticks adjacent to him.
 ##### Solution:
+Every philosopher picks up the chopsticks one by one and eats and then puts them down when he is done eating. To make our solution deadlock-free, we have defined a separate function for the last philospher process, which picks up chopsticks in the opposite order, thus preventing deadlock.
+
 ### Readers Writers Problem
 ##### Description:
 The Reader-Writer Problem is a classic scenario in Computer Science where multiple processes concurrently access shared resources.The critical section can be accessed by only one writer or by multiple readers simultaneously at any point of time. Semaphores are used to prevent conflicts and ensure proper process synchronization.
@@ -30,11 +33,6 @@ There are 3 ingredients involved and 3 smokers involved with each having infinit
 We maintain an atomic integer which tells the state of the table(what ingredients are there in case table is not empty or is the table empty) and then make each smoker wait till the two ingredients placed by agent are such that non of them are with the smoker which picks up the ingredients. The ingredients to be put on table are decided randomly.
 ### Sleeping Barbers' Problem
 ##### Description:
-In computer science, the sleeping barber problem is a classic inter-process communication and synchronization problem that illustrates the complexities that arise when there are multiple operating system processes. The problem conatins multiple barbers with multiple barber chairs, a waiting room with more chairs for waiting customers. The following rules apply: 
-* If there are no customers, the barbers fall asleep in the chair
-* A customer must wake the barber if he is asleep
-* If a customer arrives while all the barbers are working, the customer leaves if all chairs are occupied and sits in an empty chair if it's available
-* When a barber finishes a haircut, he inspects the waiting room to see if there are any waiting customers and falls asleep if there are none
 ##### Solution:
 ### Sushi Bar Problem
 ##### Description: 
@@ -74,7 +72,7 @@ manner so that the following rules are followed:
   The function then runs in an infinite loop to keep the program running.
 
 ###### Pseudo-Code!
-```py
+py
 def sushi_bar(customer_id):
     global eating, waiting
     while True:
@@ -97,7 +95,7 @@ def sushi_bar(customer_id):
                 for i in range(n):
                     block.notify()
         time.sleep(3)
-```
+
 ### Unisex Bathroom Problem
 ##### Description:
 * There are two types of employees (processes): males and females
@@ -115,7 +113,7 @@ def sushi_bar(customer_id):
     - `empty = 1, turnstile = 1`
 
   * Male process:
-    ```c
+    c
     wait(turnstile);
       wait(male_count_mutex);
         male_count++;
@@ -133,20 +131,20 @@ def sushi_bar(customer_id):
         signal(empty);
       }
     signal(male_count_mutex);
-    ```
+    
 
   * Female process:  
     -- similar to the male process --
 
 ---
 ## Team members:
-* **Priyansh Rathi** 20116073 B.Tech ECE 3Y
-* **Ahsen Kamal** 20116073 B.Tech ECE 3Y
-* **Sudarshan Shenoy** 20116073 B.Tech ECE 3Y
-* **Patel Jainil Subhaskumar** 21114072 B.Tech CSE 2Y
-* **Gyanendra Banjare** 21114040 B.Tech CSE 2Y
-* **Manas Ghandat** 21114037 B.Tech CSE 2Y
-* **Subhajit Biswas** 21114100 B.Tech CSE 2Y
-* **Sumit Kumar** 21114101 B.Tech CSE 2Y
-* **Manan Garg** 21114056 B.Tech CSE 2Y
-* **Aarya Mukul Agrawal** 21114001 B.Tech CSE 2Y
+* *Priyansh Rathi* 20116073 B.Tech ECE 3Y
+* *Ahsen Kamal* 20116073 B.Tech ECE 3Y
+* *Sudarshan Shenoy* 20116073 B.Tech ECE 3Y
+* *Patel Jainil Subhaskumar* 21114072 B.Tech CSE 2Y
+* *Gyanendra Banjare* 21114040 B.Tech CSE 2Y
+* *Manas Ghandat* 21114037 B.Tech CSE 2Y
+* *Subhajit Biswas* 21114100 B.Tech CSE 2Y
+* *Sumit Kumar* 21114101 B.Tech CSE 2Y
+* *Manan Garg* 21114056 B.Tech CSE 2Y
+* *Aarya Mukul Agrawal* 21114001 B.Tech CSE 2Y
