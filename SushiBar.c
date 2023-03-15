@@ -1,3 +1,50 @@
+/*
+@Sumit Kumar 
+import threading
+import time
+
+eating = 0
+waiting = 0
+mutex = threading.Lock()
+block = threading.Condition(mutex)
+
+def sushi_bar(customer_id):
+    global eating, waiting
+    while True:
+        with mutex:
+            if eating == 5:
+                waiting += 1
+                print(f"waiting customer...{customer_id}")
+                block.wait()
+            else:
+                eating += 1
+            print(f"Eating customer...{customer_id}")
+        time.sleep(3)
+        with mutex:
+            eating -= 1
+            print(f"\tLeaving customer...{customer_id}")
+            if eating == 0 and waiting > 0:
+                n = min(waiting, 5)
+                waiting -= n
+                eating += n
+                for i in range(n):
+                    block.notify()
+        time.sleep(3)
+
+# create threads for customers
+customers = []
+for i in range(8):
+    customers.append(threading.Thread(target=sushi_bar, args=(i+1,)))
+
+# start threads
+for customer in customers:
+    customer.start()
+
+# wait for threads to finish
+for customer in customers:
+    customer.join()
+
+*/
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +94,7 @@ void *sushi_bar(void *arg)
         {
             waiting += 1;
             signal(&mutex);
-            printf("waiting customer...%d\n", *(int *)arg);
+            printf("\twaiting customer...%d\n", *(int *)arg);
             wait(&block);
         }
         else
@@ -59,7 +106,7 @@ void *sushi_bar(void *arg)
         sleep(3);
         wait(&mutex);
         eating -= 1;
-        printf("\tLeaving customer...%d\n", *(int *)arg);
+        printf("\t\tLeaving customer...%d\n", *(int *)arg);
         if (eating == 0 && waiting)
         {
             if (waiting < 5)
