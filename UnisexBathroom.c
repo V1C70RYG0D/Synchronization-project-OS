@@ -189,7 +189,7 @@ int main()
     
     srand(time(NULL));
 
-    while (i < NO_OF_MALES || j < NO_OF_MALES) {
+    while (i < NO_OF_MALES || j < NO_OF_FEMALES) {
       int turn = rand() % 2;
 
       if (turn == 0 && i < NO_OF_MALES) {
@@ -204,7 +204,7 @@ int main()
     }
 
 
-    // wait for the threads to run to completion
+    // wait for the threads to run through completion
     for (int i = 0; i < NO_OF_MALES; i++) {
       pthread_join(males[i], NULL);
     }
