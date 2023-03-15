@@ -30,8 +30,66 @@ Here, we have presented a Starve-free Solution with pthread implementation using
 ##### Description:
 ##### Solution:
 ### Sushi Bar Problem
-##### Description:
+##### Description: 
+
+The Sushi Bar problem is a classic synchronization problem that involves a sushi bar with a limited number of seats
+where customers can eat sushi. The problem assumes that there is one sushi chef who prepares sushi and places them
+on a bar, and multiple customers who visit the bar to eat sushi.
+The problem is to implement a solution where the chef and the customers can access the sushi bar in a synchronized
+manner so that the following rules are followed:
+
+* The chef can only place sushi on the bar if there is an empty seat.
+* The customer can only sit and eat sushi if there is sushi on the bar.
+* There are limited seats at the sushi bar, and if all seats are occupied, the customers who arrive later must wait until a seat becomes available.
+
 ##### Solution:
+
+* The code defines two custom semaphores named "block" and "mutex" to synchronize access to the sushi bar.
+
+* The "init" function initializes the semaphores and their associated mutex and condition variables.
+
+* The "wait" function waits for a semaphore to become available, and if the semaphore is not available,
+  it waits using the associated condition variable.
+
+* The "signal" function signals a waiting thread that the semaphore is available.
+
+The "sushi_bar" function is the main function that implements the solution to the Sushi Bar problem.
+The function runs in an infinite loop and represents a single customer.
+It first waits for the "mutex" semaphore to become available and then checks if there are any empty
+seats at the sushi bar. If there are no empty seats, the customer increments the "waiting" variable
+and waits for the "block" semaphore to become available. If there are empty seats,
+the customer increments the "eating" variable and signals the "mutex" semaphore.
+The customer then eats sushi for 3 seconds, decrements the "eating" variable,
+and checks if there are any waiting customers. If there are waiting customers and empty seats,
+the customer signals the "block" semaphore to allow a waiting customer to eat sushi.
+
+The "main" function initializes the semaphores and creates threads for each customer.
+The function then runs in an infinite loop to keep the program running.
+
+```py
+def sushi_bar(customer_id):
+    global eating, waiting
+    while True:
+        with mutex:
+            if eating == 5:
+                waiting += 1
+                print(f"waiting customer...{customer_id}")
+                block.wait()
+            else:
+                eating += 1
+            print(f"Eating customer...{customer_id}")
+        time.sleep(3)
+        with mutex:
+            eating -= 1
+            print(f"\tLeaving customer...{customer_id}")
+            if eating == 0 and waiting > 0:
+                n = min(waiting, 5)
+                waiting -= n
+                eating += n
+                for i in range(n):
+                    block.notify()
+        time.sleep(3)
+```
 ### Unisex Bathroom Problem
 ##### Description:
 * There are two types of employees (processes): males and females
